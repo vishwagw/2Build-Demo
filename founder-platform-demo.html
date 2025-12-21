@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FounderMatch - Find Your Perfect Co-founder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .gradient-primary {
+            background: linear-gradient(90deg, #2563eb 0%, #9333ea 100%);
+        }
+        .gradient-avatar {
+            background: linear-gradient(135deg, #3b82f6 0%, #9333ea 100%);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="gradient-primary text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                        FM
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900">FounderMatch</h1>
+                        <p class="text-xs text-slate-500">Find Your Perfect Co-founder</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="p-2 hover:bg-slate-100 rounded-lg relative">
+                        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="gradient-avatar w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                        JD
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex gap-1">
+                <button onclick="switchTab('discover')" class="nav-tab px-6 py-3 flex items-center gap-2 border-b-2 transition-colors border-blue-600 text-blue-600" data-tab="discover">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span class="font-medium">Discover</span>
+                </button>
+                <button onclick="switchTab('projects')" class="nav-tab px-6 py-3 flex items-center gap-2 border-b-2 transition-colors border-transparent text-slate-600 hover:text-slate-900" data-tab="projects">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="font-medium">Projects</span>
+                </button>
+                <button onclick="switchTab('messages')" class="nav-tab px-6 py-3 flex items-center gap-2 border-b-2 transition-colors border-transparent text-slate-600 hover:text-slate-900" data-tab="messages">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                    <span class="font-medium">Messages</span>
+                    <span class="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">2</span>
+                </button>
+                <button onclick="switchTab('meetings')" class="nav-tab px-6 py-3 flex items-center gap-2 border-b-2 transition-colors border-transparent text-slate-600 hover:text-slate-900" data-tab="meetings">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span class="font-medium">Meetings</span>
+                </button>
+                <button onclick="switchTab('contracts')" class="nav-tab px-6 py-3 flex items-center gap-2 border-b-2 transition-colors border-transparent text-slate-600 hover:text-slate-900" data-tab="contracts">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="font-medium">Contracts</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Discover Tab -->
+        <div id="discover-tab" class="tab-content">
+            <!-- Search & Filters -->
+            <div class="mb-8 space-y-4">
+                <div class="flex gap-4">
+                    <div class="flex-1 relative">
+                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search by name, skills, or ideas..."
+                            class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            oninput="filterFounders()"
+                        />
+                    </div>
+                    <button class="px-6 py-3 gradient-primary text-white rounded-xl hover:shadow-lg transition-shadow flex items-center gap-2 font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Post Your Profile
+                    </button>
+                </div>
+                
+                <div class="flex gap-2 flex-wrap" id="skillFilters">
+                    <button onclick="filterBySkill('all')" class="skill-filter px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white" data-skill="all">
+                        All Skills
+                    </button>
+                    <button onclick="filterBySkill('AI/ML')" class="skill-filter px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-skill="AI/ML">
+                        AI/ML
+                    </button>
+                    <button onclick="filterBySkill('Full-Stack Dev')" class="skill-filter px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-skill="Full-Stack Dev">
+                        Full-Stack Dev
+                    </button>
+                    <button onclick="filterBySkill('Marketing')" class="skill-filter px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-skill="Marketing">
+                        Marketing
+                    </button>
+                    <button onclick="filterBySkill('UI/UX')" class="skill-filter px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-skill="UI/UX">
+                        UI/UX
+                    </button>
+                    <button onclick="filterBySkill('Sales')" class="skill-filter px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-skill="Sales">
+                        Sales
+                    </button>
+                </div>
+            </div>
+
+            <!-- Founder Cards -->
+            <div class="grid md:grid-cols-2 gap-6" id="founderCards"></div>
+        </div>
+
+        <!-- Projects Tab -->
+        <div id="projects-tab" class="tab-content hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Active Projects</h2>
+                <button class="px-4 py-2 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Create Project
+                </button>
+            </div>
+            <div class="grid gap-6" id="projectCards"></div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messages-tab" class="tab-content hidden">
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="md:col-span-1 bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-4">Conversations</h3>
+                    <div class="space-y-2" id="messageList"></div>
+                </div>
+                <div class="md:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex items-center justify-center">
+                    <div class="text-center text-slate-500">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p>Select a conversation to view messages</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meetings Tab -->
+        <div id="meetings-tab" class="tab-content hidden">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-slate-900">Upcoming Meetings</h2>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Schedule Meeting
+                </button>
+            </div>
+            <div class="grid gap-4" id="meetingList"></div>
+        </div>
+
+        <!-- Contracts Tab -->
+        <div id="contracts-tab" class="tab-content hidden">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Partnership Agreements</h2>
+            <div class="bg-white rounded-2xl p-12 shadow-sm border border-slate-200 text-center">
+                <svg class="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">No Active Contracts</h3>
+                <p class="text-slate-600 mb-6">Create your first partnership agreement to get started</p>
+                <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+                    Create Contract
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Connection Modal -->
+    <div id="connectionModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full">
+            <div class="flex justify-between items-start mb-6">
+                <h3 class="text-xl font-bold text-slate-900" id="modalTitle">Connect with Founder</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    Introduction Message
+                </label>
+                <textarea
+                    id="introMessage"
+                    class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows="4"
+                    placeholder="Tell them why you'd like to connect..."
+                ></textarea>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="sendConnection()" class="flex-1 py-3 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium">
+                    Send Request
+                </button>
+                <button onclick="closeModal()" class="px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data
+        const founders = [
+            {
+                id: 1,
+                name: "Sarah Chen",
+                role: "Technical Founder",
+                location: "San Francisco, CA",
+                avatar: "SC",
+                skills: ["AI/ML", "Full-Stack Dev", "Product"],
+                lookingFor: "Business Co-founder",
+                ideas: "AI-powered healthcare diagnostics",
+                investment: "$50k available",
+                time: "Full-time",
+                matchScore: 95
+            },
+            {
+                id: 2,
+                name: "Marcus Johnson",
+                role: "Business Strategist",
+                location: "New York, NY",
+                avatar: "MJ",
+                skills: ["Marketing", "Sales", "Fundraising"],
+                lookingFor: "Technical Co-founder",
+                ideas: "SaaS for remote teams",
+                investment: "$30k available",
+                time: "Part-time",
+                matchScore: 88
+            },
+            {
+                id: 3,
+                name: "Priya Patel",
+                role: "Product Designer",
+                location: "London, UK",
+                avatar: "PP",
+                skills: ["UI/UX", "Branding", "Research"],
+                lookingFor: "Developer & Business Partner",
+                ideas: "Sustainable fashion marketplace",
+                investment: "Sweat equity",
+                time: "Full-time",
+                matchScore: 82
+            },
+            {
+                id: 4,
+                name: "Alex Rivera",
+                role: "Serial Entrepreneur",
+                location: "Austin, TX",
+                avatar: "AR",
+                skills: ["Operations", "Finance", "Growth"],
+                lookingFor: "Technical Team",
+                ideas: "EdTech platform for coding",
+                investment: "$100k available",
+                time: "Full-time",
+                matchScore: 91
+            }
+        ];
+
+        const projects = [
+            {
+                id: 1,
+                title: "AI Healthcare Platform",
+                category: "HealthTech",
+                stage: "Idea Stage",
+                seeking: ["CTO", "Marketing Lead"],
+                equity: "5-15%",
+                funding: "$50k seed",
+                team: 2
+            },
+            {
+                id: 2,
+                title: "Sustainable Fashion Marketplace",
+                category: "E-commerce",
+                stage: "MVP Built",
+                seeking: ["Full-stack Developer", "Growth Hacker"],
+                equity: "3-10%",
+                funding: "Bootstrap",
+                team: 3
+            },
+            {
+                id: 3,
+                title: "Remote Team Collaboration Tool",
+                category: "SaaS",
+                stage: "Early Traction",
+                seeking: ["Sales Lead", "Product Manager"],
+                equity: "2-8%",
+                funding: "$200k raised",
+                team: 5
+            }
+        ];
+
+        const messages = [
+            { id: 1, from: "Sarah Chen", preview: "I'd love to discuss the AI healthcare project...", time: "2m ago", unread: true },
+            { id: 2, from: "Marcus Johnson", preview: "Thanks for connecting! When can we schedule a call?", time: "1h ago", unread: true },
+            { id: 3, from: "Priya Patel", preview: "I reviewed your portfolio - impressive work!", time: "3h ago", unread: false }
+        ];
+
+        const meetings = [
+            { id: 1, title: "Partnership Discussion", with: "Sarah Chen", time: "Tomorrow, 2:00 PM", type: "Video Call" },
+            { id: 2, title: "Project Kickoff", with: "Marcus Johnson", time: "Dec 22, 10:00 AM", type: "In-person" }
+        ];
+
+        let connectedFounders = [];
+        let selectedFounder = null;
+        let currentSkillFilter = 'all';
+
+        // Initialize
+        function init() {
+            renderFounders();
+            renderProjects();
+            renderMessages();
+            renderMeetings();
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('border-blue-600', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-slate-600');
+            });
+            
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+            activeTab.classList.remove('border-transparent', 'text-slate-600');
+            activeTab.classList.add('border-blue-600', 'text-blue-600');
+        }
+
+        // Render founders
+        function renderFounders() {
+            const container = document.getElementById('founderCards');
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = founders.filter(f => {
+                const matchesSearch = f.name.toLowerCase().includes(searchQuery) ||
+                                    f.ideas.toLowerCase().includes(searchQuery) ||
+                                    f.skills.some(s => s.toLowerCase().includes(searchQuery));
+                const matchesFilter = currentSkillFilter === 'all' || f.skills.includes(currentSkillFilter);
+                return matchesSearch && matchesFilter;
+            });
+
+            container.innerHTML = filtered.map(founder => `
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex gap-4">
+                            <div class="w-16 h-16 gradient-avatar rounded-xl flex items-center justify-center text-white text-xl font-bold">
+                                ${founder.avatar}
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">${founder.name}</h3>
+                                <p class="text-sm text-slate-600">${founder.role}</p>
+                                <div class="flex items-center gap-1 mt-1 text-xs text-slate-500">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    ${founder.location}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+                            <svg class="w-4 h-4 text-green-600 fill-green-600" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span class="text-sm font-semibold text-green-700">${founder.matchScore}%</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-4">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 mb-1">SKILLS</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${founder.skills.map(skill => `
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">${skill}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 mb-1">LOOKING FOR</p>
+                            <p class="text-sm text-slate-700 font-medium">${founder.lookingFor}</p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 mb-1">PROJECT IDEA</p>
+                            <p class="text-sm text-slate-700">${founder.ideas}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 mb-1">INVESTMENT</p>
+                                <div class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <p class="text-sm font-semibold text-slate-700">${founder.investment}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 mb-1">AVAILABILITY</p>
+                                <div class="flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <p class="text-sm font-semibold text-slate-700">${founder.time}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button 
+                            onclick="openConnectionModal(${founder.id})"
+                            class="flex-1 py-2.5 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium ${connectedFounders.includes(founder.id) ? 'opacity-50 cursor-not-allowed' : ''}"
+                            ${connectedFounders.includes(founder.id) ? 'disabled' : ''}
+                        >
+                            ${connectedFounders.includes(founder.id) ? 
+                                '<span class="flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Connected</span>' : 
+                                'Connect'
+                            }
+                        </button>
+                        <button class="px-4 py-2.5 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
+                            View Profile
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render projects
+        function renderProjects() {
+            const container = document.getElementById('projectCards');
+            container.innerHTML = projects.map(project => `
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-lg font-bold text-slate-900">${project.title}</h3>
+                                <span class="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded-full">${project.category}</span>
+                            </div>
+                            <p class="text-sm text-slate-600">${project.stage}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-4">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 mb-2">SEEKING</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${project.seeking.map(role => `
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">${role}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 pt-2">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 mb-1">EQUITY</p>
+                                <p class="text-sm font-semibold text-slate-700">${project.equity}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 mb-1">FUNDING</p>
+                                <p class="text-sm font-semibold text-slate-700">${project.funding}</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-500 mb-1">TEAM SIZE</p>
+                                <p class="text-sm font-semibold text-slate-700">${project.team} members</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button class="flex-1 py-2.5 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium">
+                            Apply to Join
+                        </button>
+                        <button class="px-4 py-2.5 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render messages
+        function renderMessages() {
+            const container = document.getElementById('messageList');
+            container.innerHTML = messages.map(msg => `
+                <div class="p-3 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors ${msg.unread ? 'bg-blue-50' : ''}">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 gradient-avatar rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
+                            ${msg.from.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="text-sm font-semibold text-slate-900">${msg.from}</p>
+                                <span class="text-xs text-slate-500">${msg.time}</span>
+                            </div>
+                            <p class="text-sm text-slate-600 truncate">${msg.preview}</p>
+                        </div>
+                        ${msg.unread ? '<div class="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0 mt-2"></div>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render meetings
+        function renderMeetings() {
+            const container = document.getElementById('meetingList');
+            container.innerHTML = meetings.map(meeting => `
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="flex items-start justify-between">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 mb-1">${meeting.title}</h3>
+                                <p class="text-sm text-slate-600 mb-2">with ${meeting.with}</p>
+                                <div class="flex items-center gap-4 text-sm">
+                                    <span class="flex items-center gap-1 text-slate-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        ${meeting.time}
+                                    </span>
+                                    <span class="px-2 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded">${meeting.type}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg font-medium text-sm">
+                            Join
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter founders by search
+        function filterFounders() {
+            renderFounders();
+        }
+
+        // Filter by skill
+        function filterBySkill(skill) {
+            currentSkillFilter = skill;
+            
+            document.querySelectorAll('.skill-filter').forEach(btn => {
+                if (btn.dataset.skill === skill) {
+                    btn.classList.remove('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'border', 'border-slate-200');
+                    btn.classList.add('bg-blue-600', 'text-white');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('bg-white', 'text-slate-600', 'hover:bg-slate-100', 'border', 'border-slate-200');
+                }
+            });
+            
+            renderFounders();
+        }
+
+        // Open connection modal
+        function openConnectionModal(founderId) {
+            if (connectedFounders.includes(founderId)) return;
+            
+            selectedFounder = founders.find(f => f.id === founderId);
+            document.getElementById('modalTitle').textContent = `Connect with ${selectedFounder.name}`;
+            document.getElementById('connectionModal').classList.remove('hidden');
+            document.getElementById('connectionModal').classList.add('flex');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('connectionModal').classList.add('hidden');
+            document.getElementById('connectionModal').classList.remove('flex');
+            document.getElementById('introMessage').value = '';
+            selectedFounder = null;
+        }
+
+        // Send connection
+        function sendConnection() {
+            if (selectedFounder) {
+                connectedFounders.push(selectedFounder.id);
+                closeModal();
+                renderFounders();
+                
+                // Show success notification (you could add a toast notification here)
+                alert(`Connection request sent to ${selectedFounder.name}!`);
+            }
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
