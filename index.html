@@ -99,12 +99,12 @@
                         <input
                             type="text"
                             id="searchInput"
+                            aria-label="Search founders by name, skills, or idea"
                             placeholder="Search by name, skills, or ideas..."
                             class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            oninput="filterFounders()"
                         />
                     </div>
-                    <button class="px-6 py-3 gradient-primary text-white rounded-xl hover:shadow-lg transition-shadow flex items-center gap-2 font-medium">
+                    <button id="postProfileBtn" class="px-6 py-3 gradient-primary text-white rounded-xl hover:shadow-lg transition-shadow flex items-center gap-2 font-medium" aria-haspopup="dialog" aria-label="Post your profile">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
@@ -135,7 +135,16 @@
             </div>
 
             <!-- Founder Cards -->
-            <div class="grid md:grid-cols-2 gap-6" id="founderCards"></div>
+            <div class="grid md:grid-cols-2 gap-6" id="founderCards" role="list"></div>
+
+            <!-- No results placeholder -->
+            <div id="noResults" class="hidden bg-white rounded-2xl p-8 shadow-sm border border-slate-200 text-center" role="status" aria-live="polite">
+                <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <h3 class="text-lg font-bold text-slate-900 mb-2">No results found</h3>
+                <p class="text-slate-600">Try different keywords or clear filters.</p>
+            </div>
         </div>
 
         <!-- Projects Tab -->
@@ -201,18 +210,18 @@
     </main>
 
     <!-- Connection Modal -->
-    <div id="connectionModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div id="connectionModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="bg-white rounded-2xl p-8 max-w-md w-full">
             <div class="flex justify-between items-start mb-6">
                 <h3 class="text-xl font-bold text-slate-900" id="modalTitle">Connect with Founder</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600" aria-label="Close modal">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
             <div class="mb-6">
-                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                <label class="block text-sm font-semibold text-slate-700 mb-2" for="introMessage">
                     Introduction Message
                 </label>
                 <textarea
@@ -223,7 +232,7 @@
                 ></textarea>
             </div>
             <div class="flex gap-3">
-                <button onclick="sendConnection()" class="flex-1 py-3 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium">
+                <button onclick="sendConnection()" class="flex-1 py-3 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium" id="sendConnectionBtn">
                     Send Request
                 </button>
                 <button onclick="closeModal()" class="px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
@@ -233,9 +242,33 @@
         </div>
     </div>
 
+    <!-- Profile Detail Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+        <div class="bg-white rounded-2xl p-6 max-w-xl w-full">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-bold text-slate-900" id="profileTitle">Profile</h3>
+                <button onclick="closeProfileModal()" class="text-slate-400 hover:text-slate-600" aria-label="Close profile">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="profileContent">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="mt-4 flex gap-3">
+                <button id="profileConnectBtn" class="flex-1 py-3 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium">Connect</button>
+                <button id="profileMessageBtn" class="px-6 py-3 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed right-4 bottom-4 space-y-2 z-60" aria-live="polite" aria-atomic="true"></div>
+
     <script>
         // Data
-        const founders = [
+        let founders = [
             {
                 id: 1,
                 name: "Sarah Chen",
@@ -334,7 +367,7 @@
             { id: 2, title: "Project Kickoff", with: "Marcus Johnson", time: "Dec 22, 10:00 AM", type: "In-person" }
         ];
 
-        let connectedFounders = [];
+        let connectedFounders = JSON.parse(localStorage.getItem('connectedFounders') || '[]');
         let selectedFounder = null;
         let currentSkillFilter = 'all';
 
@@ -374,8 +407,16 @@
                 return matchesSearch && matchesFilter;
             });
 
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                document.getElementById('noResults').classList.remove('hidden');
+                return;
+            } else {
+                document.getElementById('noResults').classList.add('hidden');
+            }
+
             container.innerHTML = filtered.map(founder => `
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                <div role="listitem" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex gap-4">
                             <div class="w-16 h-16 gradient-avatar rounded-xl flex items-center justify-center text-white text-xl font-bold">
@@ -447,14 +488,14 @@
                         <button 
                             onclick="openConnectionModal(${founder.id})"
                             class="flex-1 py-2.5 gradient-primary text-white rounded-lg hover:shadow-lg transition-shadow font-medium ${connectedFounders.includes(founder.id) ? 'opacity-50 cursor-not-allowed' : ''}"
-                            ${connectedFounders.includes(founder.id) ? 'disabled' : ''}
+                            ${connectedFounders.includes(founder.id) ? 'disabled' : ''} aria-disabled="${connectedFounders.includes(founder.id) ? 'true' : 'false'}"
                         >
                             ${connectedFounders.includes(founder.id) ? 
                                 '<span class="flex items-center justify-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Connected</span>' : 
                                 'Connect'
                             }
                         </button>
-                        <button class="px-4 py-2.5 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
+                        <button onclick="openProfileModal(${founder.id})" class="px-4 py-2.5 border-2 border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
                             View Profile
                         </button>
                     </div>
@@ -614,16 +655,115 @@
         // Send connection
         function sendConnection() {
             if (selectedFounder) {
-                connectedFounders.push(selectedFounder.id);
+                if (!connectedFounders.includes(selectedFounder.id)) {
+                    connectedFounders.push(selectedFounder.id);
+                    localStorage.setItem('connectedFounders', JSON.stringify(connectedFounders));
+                }
                 closeModal();
                 renderFounders();
-                
-                // Show success notification (you could add a toast notification here)
-                alert(`Connection request sent to ${selectedFounder.name}!`);
+                showToast(`Connection request sent to ${selectedFounder.name}!`);
             }
         }
 
-        // Initialize on load
+        // Helpers
+        function debounce(fn, delay) {
+            let timer;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        function showToast(message, timeout = 4000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return alert(message);
+            const el = document.createElement('div');
+            el.className = 'px-4 py-2 bg-slate-900 text-white rounded shadow-md';
+            el.setAttribute('role','status');
+            el.setAttribute('aria-live','polite');
+            el.textContent = message;
+            container.appendChild(el);
+            setTimeout(() => {
+                el.classList.add('opacity-0','transition-opacity');
+                setTimeout(() => container.removeChild(el), 300);
+            }, timeout);
+        }
+
+        function loadStoredFounders() {
+            try {
+                const s = localStorage.getItem('founders');
+                if (s) {
+                    const parsed = JSON.parse(s);
+                    if (Array.isArray(parsed)) founders = parsed;
+                }
+            } catch (e) {
+                console.error('Failed to parse stored founders', e);
+            }
+        }
+
+        function openProfileModal(founderId) {
+            const founder = founders.find(f => f.id === founderId);
+            if (!founder) return;
+            document.getElementById('profileTitle').textContent = founder.name;
+            document.getElementById('profileContent').innerHTML = `
+                <div class="flex gap-4 items-center mb-4">
+                    <div class="w-16 h-16 gradient-avatar rounded-xl flex items-center justify-center text-white text-xl font-bold">${founder.avatar}</div>
+                    <div>
+                        <p class="text-sm text-slate-600">${founder.role} • ${founder.location}</p>
+                        <p class="text-sm font-semibold text-slate-700 mt-1">${founder.lookingFor}</p>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-700 mb-3">${founder.ideas}</p>
+                <div class="flex flex-wrap gap-2 mb-3">
+                    ${founder.skills.map(s => `<span class="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">${s}</span>`).join('')}
+                </div>
+            `;
+            document.getElementById('profileModal').classList.remove('hidden');
+            document.getElementById('profileModal').classList.add('flex');
+            document.getElementById('profileConnectBtn').onclick = function() {
+                openConnectionModal(founderId);
+                closeProfileModal();
+            };
+            document.getElementById('profileMessageBtn').onclick = function() {
+                showToast('Messaging will be available soon.');
+            };
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+            document.getElementById('profileModal').classList.remove('flex');
+        }
+
+        // Wire up search debounce and quick post-profile flow
+        document.getElementById('searchInput').addEventListener('input', debounce(filterFounders, 250));
+        document.getElementById('postProfileBtn').addEventListener('click', function() {
+            const name = prompt('Full name');
+            if (!name) return;
+            const role = prompt('Role/title', 'Founder');
+            const skills = prompt('Skills (comma-separated)', 'Full-Stack Dev').split(',').map(s=>s.trim()).filter(Boolean);
+            const ideas = prompt('Short project idea', '');
+            const avatar = name.split(' ').map(n => n[0]).slice(0,2).join('').toUpperCase();
+            const newFounder = {
+                id: Date.now(),
+                name,
+                role,
+                location: 'Unknown',
+                avatar,
+                skills,
+                lookingFor: 'Co-founder',
+                ideas,
+                investment: '',
+                time: 'Part-time',
+                matchScore: Math.floor(60 + Math.random() * 35)
+            };
+            founders.push(newFounder);
+            localStorage.setItem('founders', JSON.stringify(founders));
+            renderFounders();
+            showToast('Profile posted');
+        });
+
+        // load stored data and initialize
+        loadStoredFounders();
         init();
     </script>
 </body>
